@@ -17,6 +17,7 @@
     "concurrently": "^8.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "curl": "^0.1.4",
     "dotenv": "^16.6.1",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
