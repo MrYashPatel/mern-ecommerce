@@ -32,4 +32,6 @@ jobs:
           context: .
           file: ./Dockerfile  # Capital D if your Dockerfile is named like that
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ steps.image_tag.outputs.tag }}
+          tags: |
+                ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ steps.image_tag.outputs.tag }}
+                ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
