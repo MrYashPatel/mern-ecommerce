@@ -1,25 +1,40 @@
 name: github-actions-ecommerce
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+on: 
+    push:
+        branches:
+            - main
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22'
+#Start a workflow to build and deploy a MERN E-Commerce application using GitHub Actions
 
-      - name: Install dependencies
-        run: npm install
+    jobs: 
+        build-and-push:
+            runs-on: ubuntu-latest
 
-      - name: Build frontend
-        run: npm run build
+            steps:
+                - name: Checkout code
+                  uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t my-ecommerce-app .
+                # Set image tag
+                - name: Set image tag
+                  id : image_tag
+                  run: echo "${{ github.sha}}" >> "$GITHUB_OUTPUT" 
 
-      - name: Push Docker image to registry
-        run: docker push my-ecommerce-app
+                # Login to Docker Hub
+                - name: Login in to Docker
+                  uses: docker/login-action@v2
+                  with:
+                    username: ${{ secrets.DOCKER_USERNAME }}
+                    password: ${{ secrets.DOCKER_PAT }}
+                  echo: "Docker login successful"
+            
+                #Build and push Docker image
+                - name: Build and push Docker image
+                uses: docker/build-push-action@v4
+                with:
+                    context: .
+                    file: ./dockerfile
+                    push: true
+                    tags: ${{ secrets.DOCKER_USERNAME }}/${{github.repository}}:${{ steps.image_tag.outputs.image_tag }}
+                    cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/mern-ecommerce:cache
+                    cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/mern-ecommerce:cache,mode=max
+    
