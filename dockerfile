@@ -2,6 +2,7 @@
 FROM node:22-alpine AS frontend-builder
 WORKDIR /app/frontend
 
+# Install dependencies for the frontend
 COPY frontend/package*.json ./
 RUN npm install --frozen-lockfile
 COPY frontend/ ./
