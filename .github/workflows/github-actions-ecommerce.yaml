@@ -1,6 +1,9 @@
 name: github-actions-ecommerce
 
-on: 
+on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -42,3 +45,4 @@ jobs:
                 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ steps.image_tag.outputs.tag }}
 
                 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+
