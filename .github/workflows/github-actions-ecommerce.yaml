@@ -1,9 +1,15 @@
 name: github-actions-ecommerce
 
 on: 
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+      version:
+        description: 'Release version'
+        required: false
 
 jobs: 
   build-and-push:
@@ -34,4 +40,5 @@ jobs:
           push: true
           tags: |
                 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ steps.image_tag.outputs.tag }}
+
                 ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
